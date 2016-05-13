@@ -22,10 +22,13 @@ class MyListView extends Component {
         .then((response) => response.json())
         .then((responseData) => {
             console.log('这里是成功回调， set 数据', responseData);
-            this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(responseData.stories),
-                loaded: true
-            });
+            // 故意弄个慢的效果 看广告时间
+            setTimeout(() => {
+                this.setState({
+                    dataSource: this.state.dataSource.cloneWithRows(responseData.stories),
+                    loaded: true
+                });
+            }, 1500);
         })
         .catch(err => {
             console.error('出错了:', err);
@@ -33,12 +36,12 @@ class MyListView extends Component {
     }
 
     onPressMovie(id) {
-        this.props.navigator.push({id: 'detail', itemId: id});
+        this.props.navigator.push({id: 'detail', title: "详情页", itemId: id});
     }
     renderMovie = (movie) => {
         //console.log('调试---》', movie);
         return (
-            <TouchableHighlight onPress={this.onPressMovie.bind(this, movie.id)}>
+            <TouchableHighlight underlayColor='#e1f6ff' onPress={this.onPressMovie.bind(this, movie.id)}>
                 <View style={styles.container}>
                     <Image style={styles.thumbnail} source={{uri: movie.images[0]}} />
                     <View style={styles.rightContainer}>
@@ -72,8 +75,8 @@ var styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#F5FCFF',
-        marginBottom: 5,
         borderBottomColor: '#eee',
+        marginVertical: 3,
         paddingHorizontal : 10
     },
     rightContainer: {
@@ -82,6 +85,7 @@ var styles = StyleSheet.create({
     listView: {
         paddingTop: 20,
         backgroundColor: '#F5FCFF',
+        paddingBottom: 10
     },
     title: {
         fontSize: 20,

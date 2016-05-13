@@ -11,8 +11,10 @@ import React, {
   View,
   Image,
   BackAndroid,
+  TouchableOpacity,
   Navigator,
-  Dimensions
+  Dimensions,
+  ToastAndroid
 } from 'react-native';
 
 import MyListView from './app/views/ListView';
@@ -41,17 +43,67 @@ class Hello extends Component {
   }
 }
 
+var NavigationBarRouteMapper = {
+
+  LeftButton: function(route, navigator, index, navState) {
+    if (index === 0) {
+      return null;
+    }
+
+    var previousRoute = navState.routeStack[index - 1];
+    return (
+        <TouchableOpacity
+            onPress={() => navigator.pop()}
+            style={styles.navBarLeftButton}>
+          <Text style={[styles.navBarText, styles.navBarButtonText]}>
+            {previousRoute.title || '返回'}
+          </Text>
+        </TouchableOpacity>
+    );
+  },
+
+  RightButton: function(route, navigator, index, navState) {
+    return (
+        <TouchableOpacity
+            onPress={() => alert('下一页')}
+            style={styles.navBarRightButton}>
+          <Text style={[styles.navBarText, styles.navBarButtonText]}>
+            Next
+          </Text>
+        </TouchableOpacity>
+    );
+  },
+
+  Title: function(route, navigator, index, navState) {
+    return (
+        <Text style={[styles.navBarText, styles.navBarTitleText]}>
+          {route.title}
+        </Text>
+    );
+  },
+
+};
 var _navigator = null;
 class AppNavigator extends Component {
-
+  constructor() {
+    super();
+    this.lastBackPressed = null
+  }
   componentDidMount() {
     BackAndroid.addEventListener('hardwareBackPress', function() {
-      console.log('点击了返回', _navigator.getCurrentRoutes().length);
-      if(_navigator == null){
+      if(_navigator == null){ return false; }
+      let routeLength = _navigator.getCurrentRoutes().length;
+      console.log('点击了返回', routeLength);
+
+      if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+        //最近2秒内按过back键，可以退出应用。
         return false;
       }
-      if(_navigator.getCurrentRoutes().length === 1){
-        return false;
+
+      if (routeLength === 1) {
+        this.lastBackPressed = Date.now();
+        ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+        return true;
       }
       _navigator.pop();
       return true;
@@ -67,13 +119,13 @@ class AppNavigator extends Component {
         console.log('详情页 --- itemId', route.itemId);
         return <DetailView navigator={nav} itemId={route.itemId}/>;
       default:
-        return <MyListView navigator={nav}/>
+        return <MyListView navigator={nav} />
     }
   }
   render() {
     return (
         <Navigator
-            initialRoute={{ id: 'home'}}
+            initialRoute={{ id: 'home', title: '首页'}}
             renderScene={this.renderScene}
             configureScene={(route) => {
               if (route.sceneConfig) {
@@ -81,6 +133,12 @@ class AppNavigator extends Component {
               }
               return Navigator.SceneConfigs.FloatFromRight;
             }}
+            /*navigationBar={
+              <Navigator.NavigationBar
+                routeMapper={NavigationBarRouteMapper}
+                style={styles.navBar}
+              />
+            }*/
         />
     );
   }
@@ -98,6 +156,29 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
+  },
+
+
+  navBar: {
+    backgroundColor: 'white',
+  },
+  navBarText: {
+    fontSize: 16,
+    marginVertical: 10,
+  },
+  navBarTitleText: {
+    color: '#373E4D',
+    fontWeight: '500',
+    marginVertical: 9,
+  },
+  navBarLeftButton: {
+    paddingLeft: 10,
+  },
+  navBarRightButton: {
+    paddingRight: 10,
+  },
+  navBarButtonText: {
+    color: '#5890FF',
   },
 });
 
