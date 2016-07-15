@@ -17,74 +17,11 @@ import React, {
   ToastAndroid
 } from 'react-native';
 
-import ScrollableTabView, {DefaultTabBar} from 'react-native-scrollable-tab-view';
 
-import MyListView from './app/views/ListView';
-import DetailView from './app/views/DetailView';
+import MyListView from './ListView';
+import DetailView from './DetailView';
 
-class Hello extends Component {
-  constructor(prop) {
-    super(prop);
-    this.state = {splashed: false}
-  }
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({splashed: true})
-    }, 1500)
-  }
-  render() {
-    console.log('Hello 组件渲染：', this.state);
-    if (this.state.splashed) {
-      return <MyListView navigator={_navigator}/>;
-    }
-    return (
-      <View style={styles.container}>
-        <Image style={styles.welcomeImg} source={{uri: 'https://pic4.zhimg.com/715717d2436d1fed01f2b20453dc686b.jpg'}}></Image>
-      </View>
-    );
-  }
-}
 
-var NavigationBarRouteMapper = {
-
-  LeftButton: function(route, navigator, index, navState) {
-    if (index === 0) {
-      return null;
-    }
-
-    var previousRoute = navState.routeStack[index - 1];
-    return (
-        <TouchableOpacity
-            onPress={() => navigator.pop()}
-            style={styles.navBarLeftButton}>
-          <Text style={[styles.navBarText, styles.navBarButtonText]}>
-            {previousRoute.title || '返回'}
-          </Text>
-        </TouchableOpacity>
-    );
-  },
-
-  RightButton: function(route, navigator, index, navState) {
-    return (
-        <TouchableOpacity
-            onPress={() => alert('下一页')}
-            style={styles.navBarRightButton}>
-          <Text style={[styles.navBarText, styles.navBarButtonText]}>
-            Next
-          </Text>
-        </TouchableOpacity>
-    );
-  },
-
-  Title: function(route, navigator, index, navState) {
-    return (
-        <Text style={[styles.navBarText, styles.navBarTitleText]}>
-          {route.title}
-        </Text>
-    );
-  },
-
-};
 var _navigator = null;
 class AppNavigator extends Component {
   constructor() {
@@ -124,19 +61,7 @@ class AppNavigator extends Component {
         return <MyListView navigator={nav} />
     }
   }
-  renderScroll() {
-    return <ScrollableTabView
-        style={{marginTop: 20 }}
-        tabBarPosition="bottom"
-        renderTabBar={() => <DefaultTabBar />}
-    >
-      <Text tabLabel='Tab #1'>My</Text>
-      <Text tabLabel='Tab #2'>favorite</Text>
-      <Text tabLabel='Tab #3'>project</Text>
-    </ScrollableTabView>;
-  }
   render() {
-    //return this.renderScroll();
     return (
         <Navigator
             initialRoute={{ id: 'home', title: '首页'}}
@@ -147,12 +72,6 @@ class AppNavigator extends Component {
               }
               return Navigator.SceneConfigs.FloatFromRight;
             }}
-            /*navigationBar={
-              <Navigator.NavigationBar
-                routeMapper={NavigationBarRouteMapper}
-                style={styles.navBar}
-              />
-            }*/
         />
     );
   }

@@ -2,7 +2,8 @@ import React, {
     Component, Text, View, StyleSheet, Image, ListView, ScrollView,
     TouchableHighlight
 } from 'react-native';
-import SplashScreen from './SplashScreen'
+import SplashScreen from './SplashScreen';
+import Swiper from 'react-native-swiper';
 
 class MyListView extends Component {
     constructor(props) {
@@ -58,6 +59,25 @@ class MyListView extends Component {
 
         return (
             <ScrollView>
+                <Swiper
+                    style={styles.wrapper}
+                    height={260}
+                    autoplay={true}
+                >
+                    <View style={styles.slide1}>
+                        <Text>放轮播图 1</Text>
+                    </View>
+                    <View style={styles.slide2}>
+                        <Text>放轮播图 2</Text>
+                    </View>
+                    <View style={styles.slide3}>
+                        <Text>放轮播图 3</Text>
+                    </View>
+                    <View style={styles.slide3}>
+                        <Image style={styles.slideImg} source={{uri: 'http://e.hiphotos.baidu.com/image/w%3D310/sign=2da0245f79ec54e741ec1c1f89399bfd/9d82d158ccbf6c818c958589be3eb13533fa4034.jpg'}}/>
+                    </View>
+                </Swiper>
+
                 <ListView
                     dataSource={this.state.dataSource}
                     renderRow={this.renderMovie}
@@ -96,9 +116,35 @@ var styles = StyleSheet.create({
         textAlign: 'center'
     },
     thumbnail: {
-        width: 65,
+        width: 90,
         height: 85,
     },
+
+    wrapper: {
+    },
+    slide1: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#00FFFF'
+    },
+
+    slide2: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#FFD700'
+    },
+
+    slide3: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#7FFFD4'
+    },
+    slideImg: {
+        flex: 1,
+    }
 });
 
 export default MyListView
