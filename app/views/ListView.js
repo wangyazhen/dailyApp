@@ -5,6 +5,8 @@ import React, {
 import SplashScreen from './SplashScreen';
 import Swiper from 'react-native-swiper';
 
+import Dimensions from 'Dimensions';
+
 class MyListView extends Component {
     constructor(props) {
         super(props);
@@ -57,24 +59,30 @@ class MyListView extends Component {
             return <SplashScreen/>;
         }
 
+        let {height, width} = Dimensions.get('window');
+        let SwiperHeight = 260;
+
+        let swiperImgStyle = {width: width, height: SwiperHeight};
+        // 图片的缩放模式 contain cover stretch center
         return (
             <ScrollView>
                 <Swiper
                     style={styles.wrapper}
-                    height={260}
+                    height={SwiperHeight}
                     autoplay={true}
+                    loop={false}
                 >
                     <View style={styles.slide1}>
-                        <Text>放轮播图 1</Text>
+                        <Image style={{flex: 1}} source={{uri: 'http://img.zcool.cn/sucaiori/8521B6E2-A386-A3CA-AB73-C53E9D6A974B.jpg@236w_0l.jpg'}}/>
                     </View>
                     <View style={styles.slide2}>
-                        <Text>放轮播图 2</Text>
+                        <Image style={{height: SwiperHeight, resizeMode: Image.resizeMode.stretch}} source={{uri: 'http://img.zcool.cn/sucaiori/4E531247-688D-1963-F672-8AEBE948AA0E.jpg@236w_0l.jpg'}}/>
                     </View>
                     <View style={styles.slide3}>
-                        <Text>放轮播图 3</Text>
+                        <Image style={swiperImgStyle} source={{uri: 'http://f.hiphotos.baidu.com/image/h%3D200/sign=a31c9680a1773912db268261c8198675/730e0cf3d7ca7bcb5f591712b6096b63f624a8e9.jpg'}}/>
                     </View>
                     <View style={styles.slide3}>
-                        <Image style={styles.slideImg} source={{uri: 'http://e.hiphotos.baidu.com/image/w%3D310/sign=2da0245f79ec54e741ec1c1f89399bfd/9d82d158ccbf6c818c958589be3eb13533fa4034.jpg'}}/>
+                        <Image style={swiperImgStyle} source={{uri: 'http://e.hiphotos.baidu.com/image/w%3D310/sign=2da0245f79ec54e741ec1c1f89399bfd/9d82d158ccbf6c818c958589be3eb13533fa4034.jpg'}}/>
                     </View>
                 </Swiper>
 
@@ -124,15 +132,11 @@ var styles = StyleSheet.create({
     },
     slide1: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#00FFFF'
+        alignItems: 'stretch'
     },
 
     slide2: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: '#FFD700'
     },
 
@@ -142,9 +146,6 @@ var styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#7FFFD4'
     },
-    slideImg: {
-        flex: 1,
-    }
 });
 
 export default MyListView
